@@ -1,0 +1,219 @@
+Name: Taylor Leffler
+UID: 114219121
+Login ID: tleffler
+
+Citations Part 0:
+
+MeeshQuest.java starter file
+
+https://www.geeksforgeeks.org/comparator-interface-java/
+code:
+    public int compare(Student a, Student b)
+    {
+        return a.name.compareTo(b.name);
+    }
+
+For documentation and general info:
+https://docs.oracle.com/javase/7/docs/api/java/util/Comparator.html  
+https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html
+https://docs.oracle.com/javase/7/docs/api/java/util/TreeSet.html
+https://docs.oracle.com/javase/8/docs/api/index.html?java/awt/geom/Point2D.Float.html
+https://www.cs.umd.edu/users/meesh/420/ProjectBook/part1/p12/node18.html
+
+
+Citations Part 1:
+
+Modified my existing code from part 0 to match the canonical given to us. Mainly by creating a MeeshQuest object and 
+a processCommand object which I did not have before. 
+
+Also added following code into my City class from the canonical. 
+	/**
+	 * Determines if this city is equal to another object. The result is true if
+	 * and only if the object is not null and a City object that contains the
+	 * same name, X and Y coordinates, radius, and color.
+	 * 
+	 * @param obj
+	 *            the object to compare this city against
+	 * @return <code>true</code> if cities are equal, <code>false</code>
+	 *         otherwise
+	 */
+	public boolean equals(final Object obj) {
+		if (obj == this)
+			return true;
+		if (obj != null && (obj.getClass().equals(this.getClass()))) {
+			City c = (City) obj;
+			return (point.equals(c.point) && (radius == c.radius) && color
+					.equals(c.color));
+		}
+		return false;
+	}
+	
+
+	/**
+	 * Returns a hash code for this city.
+	 * 
+	 * @return hash code for this city
+	 */
+	public int hashCode() {
+		int hash = 12;
+		hash = 37 * hash + name.hashCode();
+		hash = 37 * hash + point.hashCode();
+		hash = 37 * hash + radius;
+		hash = 37 * hash + color.hashCode();
+		return hash;
+	}
+
+	/**
+	 * Returns an (x,y) representation of the city. Important: casts the x and y
+	 * coordinates to integers.
+	 * 
+	 * @return string representing the location of the city
+	 */
+	public String getLocationString() {
+		final StringBuilder location = new StringBuilder();
+		location.append("(");
+		location.append(getX());
+		location.append(",");
+		location.append(getY());
+		location.append(")");
+		return location.toString();
+	}
+
+	/**
+	 * Returns a Point2D instance representing the City's location.
+	 * 
+	 * @return location of this city
+	 */
+	public Point2D.Float toPoint2D() {
+		return new Point2D.Float(point.x, point.y);
+	}
+	
+	
+https://piazza.com/class/jhihw6lg2md74t?cid=102
+	followed the TA's pointers from this post and from in class for my insert, delete, nearestCity 
+
+https://www.javaworld.com/article/2073352/core-java/core-java-simply-singleton.html
+code:  public class ClassicSingleton {
+	   private static ClassicSingleton instance = null;
+	   protected ClassicSingleton() {
+	      // Exists only to defeat instantiation.
+	   }
+	   public static ClassicSingleton getInstance() {
+	      if(instance == null) {
+	         instance = new ClassicSingleton();
+	      }
+	      return instance;
+	   }
+	}
+
+https://www.javatpoint.com/abstract-class-in-java
+code: 	abstract class Shape{  
+			abstract void draw();  
+		}  
+		//In real scenario, implementation is provided by others i.e. unknown by end user  
+		class Rectangle extends Shape{  
+			void draw(){System.out.println("drawing rectangle");}  
+		}  
+		class Circle1 extends Shape{  
+			void draw(){System.out.println("drawing circle");}  
+		}  
+		//In real scenario, method is called by programmer or user  
+		class TestAbstraction1 {  
+			public static void main(String args[]){  
+				Shape s=new Circle1();//In real scenario, object is provided through method e.g. getShape() method  
+				s.draw();  
+			}  
+		} 
+		
+https://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
+	general info and documentation
+	
+https://www.geeksforgeeks.org/implement-priorityqueue-comparator-java/
+code:  public static void main(String[] args){
+        Scanner in = new Scanner(System.in);
+        // Creating Priority queue constructor having 
+        // initial capacity=3 and a StudentComparator instance 
+        // as its parameters
+        PriorityQueue<Student> pq = new
+             PriorityQueue<Student>(5, new StudentComparator());
+                 
+                // Invoking a parameterized Student constructor with 
+                // name and cgpa as the elements of queue
+                Student student1 = new Student("Nandini", 3.2);
+                 
+                // Adding a student object containing fields 
+                // name and cgpa to priority queue 
+                pq.add(student1);
+                Student student2 = new Student("Anmol", 3.6);
+                        pq.add(student2);         
+                Student student3 = new Student("Palak", 4.0);
+                        pq.add(student3);
+                 
+                // Printing names of students in priority order,poll()
+                // method is used to access the head element of queue
+                System.out.println("Students served in their priority order");
+                 
+                while (!pq.isEmpty()) {
+                System.out.println(pq.poll().getName());
+        } 
+    }
+    
+Part 2:
+  
+Dijkstra's  
+https://gist.github.com/raymondchua/7954072
+code: 	public static void computePaths(Node source){
+		source.shortestDistance=0;
+
+		//implement a priority queue
+		PriorityQueue<Node> queue = new PriorityQueue<Node>();
+		queue.add(source);
+
+		while(!queue.isEmpty()){
+			Node u = queue.poll();
+
+			/*visit the adjacencies, starting from 
+			the nearest node(smallest shortestDistance)*/
+			
+			for(Edge e: u.adjacencies){
+
+				Node v = e.target;
+				double weight = e.weight;
+
+				//relax(u,v,weight)
+				double distanceFromU = u.shortestDistance+weight;
+				if(distanceFromU<v.shortestDistance){
+
+					/*remove v from queue for updating 
+					the shortestDistance value*/
+					queue.remove(v);
+					v.shortestDistance = distanceFromU;
+					v.parent = u;
+					queue.add(v);
+
+				}
+			}
+		}
+	}
+	
+		public static List<Node> getShortestPathTo(Node target){
+
+		//trace path from target to source
+		List<Node> path = new ArrayList<Node>();
+		for(Node node = target; node!=null; node = node.parent){
+			path.add(node);
+		}
+
+
+		//reverse the order such that it will be from source to target
+		Collections.reverse(path);
+
+		return path;
+	}
+	
+Treap code:
+Either copied or modified from TreeMap.class and AbstractMap.class source code
+
+Part 3:
+Treap code I took from canonical
+
